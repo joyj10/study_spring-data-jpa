@@ -41,6 +41,11 @@ public class Member {
         }
     }
 
+    public Member(String username, int age) {
+        this.username = username;
+        this.age = age;
+    }
+
     public void changeTeam(Team team) {
         this.team = team;
         team.getMembers().add(this);    // 객체 이기 때문에 반대 편 member 함께 변경 필요
