@@ -26,7 +26,7 @@ class MemberJpaRepositoryTest {
     @Autowired MemberJpaRepository memberJpaRepository;
 
     @Test
-    void testMember() throws Exception {
+    void testMember() {
         // given
         String username = "memberA";
         Member member = new Member(username);
@@ -41,7 +41,7 @@ class MemberJpaRepositoryTest {
     }
 
     @Test
-    void basicCRUD() throws Exception {
+    void basicCRUD() {
         // given
         Member member1 = new Member("member1");
         Member member2 = new Member("member2");
@@ -67,6 +67,29 @@ class MemberJpaRepositoryTest {
         memberJpaRepository.delete(member2);
         long deletedCount = memberJpaRepository.count();
         assertEquals(0, deletedCount);
+    }
 
+    @Test
+    void paging() {
+        //given
+        memberJpaRepository.save(new Member("member1", 10));
+        memberJpaRepository.save(new Member("member2", 10));
+        memberJpaRepository.save(new Member("member3", 10));
+        memberJpaRepository.save(new Member("member4", 10));
+        memberJpaRepository.save(new Member("member5", 10));
+        int age = 10;
+        int offset = 0;
+        int limit = 3;
+
+        //when
+        List<Member> members = memberJpaRepository.findByPage(age, offset, limit);
+        long totalCount = memberJpaRepository.totalCount(age);
+        //페이지 계산 공식 적용...
+        // totalPage = totalCount / size ...
+        // 마지막 페이지 ... // 최초 페이지 ..
+
+        //then
+        assertEquals(3, members.size());
+        assertEquals(5, totalCount);
     }
 }
