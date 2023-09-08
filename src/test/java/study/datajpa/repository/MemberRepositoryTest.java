@@ -17,8 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * MemberRepositoryTest
@@ -256,9 +255,38 @@ class MemberRepositoryTest {
             System.out.println("member.teamClass = " + member.getTeam().getClass());
             System.out.println("member.getTeam() = " + member.getTeam().getName());
         }
-
         // then
         assertEquals("teamA", members.get(0).getTeam().getName());
     }
 
+    @Test
+    void queryHint() {
+        // given
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        em.flush();
+        em.clear();
+
+        // when
+        Member findMember = memberRepository.findReadOnlyByUsername(member1.getUsername());
+        findMember.setUsername("member2");
+
+        em.flush();
+
+        // then
+        assertNotEquals("member2", member1.getUsername());
+    }
+
+    @Test
+    void lock() {
+        // given
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        em.flush();
+        em.clear();
+
+        // when
+        List<Member> members = memberRepository.findLockByUsername(member1.getUsername());
+
+        // then
+        assertEquals("member1", members.get(0).getUsername());
+    }
 }
