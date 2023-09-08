@@ -30,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
 class MemberRepositoryTest {
 
     @Autowired MemberRepository memberRepository;
@@ -209,6 +208,26 @@ class MemberRepositoryTest {
         assertEquals(3, page.getContent().size());
         assertTrue(page.hasNext());
         assertTrue(page.isFirst());
+    }
+
+    @Test
+    void bulkUpdate() {
+        //given
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
+
+        //when
+        int age = 20;
+        int resultCount = memberRepository.bulkAgePlus(age);
+
+        List<Member> result = memberRepository.findListByUsername("member5");
+        System.out.println("result.get(0) = " + result.get(0));
+
+        //then
+        assertEquals(3, resultCount);
     }
 
 }
