@@ -289,4 +289,13 @@ class MemberRepositoryTest {
         // then
         assertEquals("member1", members.get(0).getUsername());
     }
+
+    @Test
+    void callCustom() {
+        // given
+        List<Member> result = memberRepository.findMemberCustom();
+        // then
+        assertEquals(0, result.size());
+
+    }
 }
