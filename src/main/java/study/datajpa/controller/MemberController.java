@@ -49,6 +49,7 @@ public class MemberController {
     }
 
     // Spring Application 올라올 때 실행 됨 (테스트 데이터 넣는 용도)
+//    @PostConstruct
     public void init() {
         for (int i = 0; i < 100; i++) {
             memberRepository.save(new Member("user" + i, i));
